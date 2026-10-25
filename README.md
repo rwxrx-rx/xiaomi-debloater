@@ -1,12 +1,8 @@
 # Xiaomi Debloater — remove MIUI & HyperOS bloatware without root
 
-**Xiaomi Debloater** is a free, open-source desktop app for removing bloatware, ads and telemetry from Xiaomi, Redmi and POCO phones running **MIUI** or **HyperOS 1, 2 and 3**. It works over ADB, needs **no root and no bootloader unlock**, and runs on **Windows, macOS and Linux**.
+**Xiaomi Debloater** is a free, open-source desktop app for removing bloatware, ads and telemetry from Xiaomi, Redmi and POCO phones running **MIUI** or **HyperOS 1, 2 and 3**. It works over ADB, needs **no root and no bootloader unlock**, and runs on **Windows, macOS and Linux**. There is also a CLI edition that runs directly on the phone with **Android (Termux)**, see [Android (Termux)](#android-termux).
 
 Unlike general-purpose tools, it only covers Xiaomi. The package list is built for MIUI and HyperOS, rates each package's risk, and gets updates for new Xiaomi OS releases without you reinstalling the app.
-
-<!-- Add a screenshot of the Packages tab with a phone connected, saved as docs/screenshot.png:
-![Xiaomi Debloater showing HyperOS packages with risk levels](docs/screenshot.png)
--->
 
 ## Features
 
@@ -21,7 +17,7 @@ Unlike general-purpose tools, it only covers Xiaomi. The package list is built f
 
 ## Supported phones
 
-Any Xiaomi, Redmi or POCO phone with MIUI 12–14 or HyperOS 1, 2 or 3, including Global, EEA, India and China ROMs. HyperOS 3 packages come from the Xiaomi 15 Ultra, and other models share most of them. If a package on your phone is missing or wrongly labelled, please [report it](../../issues/new?template=package-report.yml).
+Any Xiaomi, Redmi or POCO phone with MIUI 12–14 or HyperOS 1, 2 or 3, including Global, EEA, India and China ROMs. HyperOS 3 packages come from the Xiaomi 15 Ultra, and other models share most of them. If a package on your phone is missing or wrongly labelled, please [report it](https://github.com/fadeltd/xiaomi-debloater/issues/new?template=package-report.yml).
 
 ## How to debloat your Xiaomi phone
 
@@ -38,20 +34,44 @@ Read the in-app **Guide** tab before removing anything marked `caution`.
 
 Every package manager below installs adb for you.
 
-| Platform | Command |
-|---|---|
-| macOS (Homebrew) | `brew install --cask fadeltd/tap/xiaomi-debloater` |
-| Windows (winget) | `winget install fadeltd.XiaomiDebloater` |
-| Windows (Scoop) | `scoop bucket add fadeltd https://github.com/fadeltd/scoop-bucket` then `scoop install xiaomi-debloater` |
-| Ubuntu, Debian, Mint | Download the `.deb` from [Releases](../../releases), then `sudo apt install ./xiaomi-debloater_*.deb` |
-| Fedora, openSUSE | Download the `.rpm` from [Releases](../../releases), then `sudo dnf install ./xiaomi-debloater-*.rpm` |
-| Linux (Snap) | `sudo snap install android-debloater` then `sudo snap connect android-debloater:adb-support` |
+| Platform             | Command                                                                                                                   |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| macOS (Homebrew)     | `brew install --cask fadeltd/tap/xiaomi-debloater`                                                                        |
+| Windows (winget)     | `winget install fadeltd.XiaomiDebloater`                                                                                  |
+| Windows (Scoop)      | `scoop bucket add fadeltd https://github.com/fadeltd/scoop-bucket` then `scoop install xiaomi-debloater`                  |
+| Ubuntu, Debian, Mint | Download the `.deb` from [Releases](https://github.com/fadeltd/xiaomi-debloater/releases), then `sudo apt install ./xiaomi-debloater_*.deb` |
+| Fedora, openSUSE     | Download the `.rpm` from [Releases](https://github.com/fadeltd/xiaomi-debloater/releases), then `sudo dnf install ./xiaomi-debloater-*.rpm` |
+| Linux (Snap)         | `sudo snap install android-debloater` then `sudo snap connect android-debloater:adb-support`                              |
 
-Or download the app for Windows, macOS or Linux from [Releases](../../releases), or [build it yourself](CONTRIBUTING.md#building-the-app).
+Or download the app for Windows, macOS or Linux from [Releases](https://github.com/fadeltd/xiaomi-debloater/releases), or [build it yourself](CONTRIBUTING.md#building-the-app).
 
 **macOS:** the app is not notarized by Apple yet, so macOS blocks the first launch. Run `xattr -dr com.apple.quarantine "/Applications/Xiaomi Debloater.app"`, or open it once, then click *Open Anyway* in System Settings > Privacy & Security.
 
 **Snap:** the snap bundles its own adb. Stop any other adb server first (`adb kill-server`), because only one can use the phone at a time.
+
+## Android (Termux)
+
+Debloat the phone from the phone itself, no PC needed. A CLI edition lives in [`termux/`](termux/) and uses the same `bloatware.json`. It needs Android 11+ (Wireless debugging) and no root.
+
+1. Install [Termux](https://f-droid.org/packages/com.termux/) from F-Droid or GitHub, **not** the Play Store build.
+2. Install the tools and get the code (replace `YOUR_USERNAME` with your GitHub name):
+
+```sh
+pkg update && pkg install python android-tools git
+git clone https://github.com/YOUR_USERNAME/xiaomi-debloater
+cd xiaomi-debloater/termux
+```
+
+3. Turn on Wireless debugging: Settings > Developer options > *Wireless debugging* > *Pair device with pairing code*. Keep Termux in split-screen so the pairing dialog stays open.
+4. Pair, connect and run:
+
+```sh
+python xdebloat.py pair IP:PAIR_PORT CODE
+python xdebloat.py connect IP:CONNECT_PORT
+python xdebloat.py          # interactive menu
+```
+
+Highlights: `list`, `remove`, `disable`, `enable`, `restore`, `--dry-run`, `--os auto`, automatic backups of every removal. `danger` packages are blocked. See [termux/README.md](termux/README.md) for all commands.
 
 ## FAQ
 
@@ -71,14 +91,8 @@ Package list corrections are the most useful contribution. See [CONTRIBUTING.md]
 
 ## Credits
 
-The package list and guide were compiled from, and credit goes to:
-[UAD-ng](https://github.com/Universal-Debloater-Alliance/universal-android-debloater-next-generation),
-[ovsky/hyperos-debloater](https://github.com/ovsky/hyperos-debloater),
-[matthieu-pierson/debloat-hyperos-adb](https://github.com/matthieu-pierson/debloat-hyperos-adb),
-[kirthandev/MIUI-Debloater-official](https://github.com/kirthandev/MIUI-Debloater-official),
-[KernelTruth's MIUI list](https://gist.github.com/KernelTruth/b85b55154c894ad77c6b62c01bfc4b50),
-the [XDA Xiaomi 15 Ultra debloat thread](https://xdaforums.com/t/xiaomi-15-ultra-global-debloat-list.4726400/)
-and the [r/miui debloat & privacy guide](https://www.reddit.com/r/miui/comments/1sd50rf/the_ultimate_miui_debloat_privacy_guide_no_root/).
+The package list and guide were compiled from, and credit goes to: [UAD-ng](https://github.com/Universal-Debloater-Alliance/universal-android-debloater-next-generation), [ovsky/hyperos-debloater](https://github.com/ovsky/hyperos-debloater), [matthieu-pierson/debloat-hyperos-adb](https://github.com/matthieu-pierson/debloat-hyperos-adb), [kirthandev/MIUI-Debloater-official](https://github.com/kirthandev/MIUI-Debloater-official), [KernelTruth's MIUI list](https://gist.github.com/KernelTruth/b85b55154c894ad77c6b62c01bfc4b50),
+the [XDA Xiaomi 15 Ultra debloat thread](https://xdaforums.com/t/xiaomi-15-ultra-global-debloat-list.4726400/) and the [r/miui debloat & privacy guide](https://www.reddit.com/r/miui/comments/1sd50rf/the_ultimate_miui_debloat_privacy_guide_no_root/).
 
 ## License
 
