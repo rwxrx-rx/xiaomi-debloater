@@ -53,6 +53,8 @@ Or download the app for Windows, macOS or Linux from [Releases](https://github.c
 
 Debloat the phone from the phone itself, no PC needed. A CLI edition lives in [`termux/`](termux/) and uses the same `bloatware.json`. It needs Android 11+ (Wireless debugging) and no root.
 
+**Quick install:** download `xiaomi-debloater-termux_*_all.deb` from [Releases](https://github.com/YOUR_USERNAME/xiaomi-debloater/releases) (tags named `termux-v*`), then run `pkg install ./xiaomi-debloater-termux_*_all.deb` and start it with `xdebloat`. Or build from source:
+
 1. Install [Termux](https://f-droid.org/packages/com.termux/) from F-Droid or GitHub, **not** the Play Store build.
 2. Install the tools and get the code (replace `YOUR_USERNAME` with your GitHub name):
 
