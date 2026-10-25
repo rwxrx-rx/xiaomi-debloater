@@ -2,4 +2,5 @@ bloatware.json
 debloater.log
 backups/
 __pycache__/
-
+dist/
+build/
