@@ -1,0 +1,45 @@
+name: Termux release
+
+on:
+  push:
+    tags: ["termux-v*"]   # e.g. git tag termux-v0.1.0 && git push origin termux-v0.1.0
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check script
+        run: |
+          python3 -m py_compile termux/xdebloat.py
+          python3 termux/xdebloat.py --help > /dev/null
+
+      - name: Work out version
+        id: v
+        run: |
+          if [ "$GITHUB_REF_TYPE" = "tag" ]; then
+            echo "version=${GITHUB_REF_NAME#termux-v}" >> "$GITHUB_OUTPUT"
+          else
+            echo "version=0.0.0-dev" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build .deb and .tar.gz
+        run: sh termux/build-deb.sh "${{ steps.v.outputs.version }}" "${{ github.repository_owner }}"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: termux-dist
+          path: termux/dist/*
+
+      - name: Publish GitHub release
+        if: github.ref_type == 'tag'
+        uses: softprops/action-gh-release@v2
+        with:
+          name: Termux ${{ steps.v.outputs.version }}
+          files: termux/dist/*
+          generate_release_notes: true

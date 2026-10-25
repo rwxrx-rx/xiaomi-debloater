@@ -17,10 +17,13 @@ import urllib.request
 from types import SimpleNamespace
 
 DB_URL = "https://raw.githubusercontent.com/fadeltd/xiaomi-debloater/main/bloatware.json"
-HERE = os.path.dirname(os.path.abspath(__file__))
-CACHE = os.path.join(HERE, "bloatware.json")
-LOG = os.path.join(HERE, "debloater.log")
-BACKUPS = os.path.join(HERE, "backups")
+# Data (package list cache, log, backups) lives in ~/.xdebloat so it works the same
+# whether run from a git clone or from the installed package.
+DATA = os.environ.get("XDEBLOAT_HOME") or os.path.join(os.path.expanduser("~"), ".xdebloat")
+os.makedirs(DATA, exist_ok=True)
+CACHE = os.path.join(DATA, "bloatware.json")
+LOG = os.path.join(DATA, "debloater.log")
+BACKUPS = os.path.join(DATA, "backups")
 CACHE_MAX_AGE = 14 * 86400  # refresh package list if older than 14 days
 PKG_RE = re.compile(r"^[A-Za-z0-9_.]+$")
 

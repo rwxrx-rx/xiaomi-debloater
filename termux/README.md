@@ -4,6 +4,11 @@ Run the debloater directly on your Xiaomi/Redmi/POCO phone, no PC and no root.
 It uses `bloatware.json` from the main project (auto-refreshed every 14 days) and talks to
 the same phone through Android's **Wireless debugging** (Android 11+).
 
+## Install (pick one)
+- **Release package (easiest):** download `xiaomi-debloater-termux_*_all.deb` from the Releases page (tags named `termux-v*`), then
+  `pkg install ./xiaomi-debloater-termux_*_all.deb` and run `xdebloat`.
+- **From source:** follow *Setup* below and run `python xdebloat.py`.
+
 ## Setup
 1. Install Termux from F-Droid or GitHub (not the Play Store build).
 2. `sh install.sh` (or `pkg install python android-tools`).
@@ -25,7 +30,7 @@ python xdebloat.py disable                     # reversible alternative
 python xdebloat.py enable
 python xdebloat.py removed                     # what can be restored
 python xdebloat.py restore com.example.app
-python xdebloat.py restore --file backups/remove-YYYYMMDD-HHMMSS.txt
+python xdebloat.py restore --file ~/.xdebloat/backups/remove-YYYYMMDD-HHMMSS.txt
 python xdebloat.py restore --all
 python xdebloat.py update                      # force-refresh package list
 ```
@@ -36,7 +41,7 @@ Scripting example: `python xdebloat.py --yes remove --risk safe --os auto --all`
 
 ## Safety
 - `danger` and `neverRemove` packages are blocked; `caution` ones show a warning.
-- Every remove/disable first saves the package list to `backups/`, and each action is logged to `debloater.log`.
+- Every remove/disable first saves the package list to `~/.xdebloat/backups/`, and each action is logged to `~/.xdebloat/debloater.log`.
 - Package names are validated before reaching the shell.
 - Removals are per-user (`pm uninstall -k --user 0`); a factory reset restores everything.
 - Back up your data first. Removing the wrong system package can require a factory reset.
